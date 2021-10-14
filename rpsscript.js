@@ -29,60 +29,68 @@ function computerPlay() {
 // console.log("bye");
 
 function playRPS(playerSelection, computerSelection) {
-    let whoWins;
-    let whatWins;
-    let whatLoses;
-    // should take input, do the comparison with the computerplay and return "You Lose! Paper beats Rock"
-    // convert user input to Capital first lowercase remainder
-    let playerTitleCase = playerSelection.charAt(0).toUpperCase() + playerSelection.slice(0).toLowerCase();
-    
-    // if user entry is not (case insensitive) rock, paper, or scissors, ask them to re-enter
-    // if (!(playerTitleCase == "Rock") || (playerTitleCase == "Paper") || (playerTitleCase == "Scissors")) {
-    //     console.log("Improper user entry. Exiting.");
-    // }
-    
-    // figure out who wins
-        // rock beats scissors
-            // if playerTitleCase is ROCK and computerSelection is SCISSORS then set WIN variables
-            // if playerTitleCase is ROCK and computerSelection is PAPER then set LOSE variables
-        if (playerTitleCase === "Rock" && computerSelection === "Scissors") {
-            let whoWins = "win";
-            whatWins = playerTitleCase;
-            whatLoses = computerSelection;
-        } else if (playerTitleCase === "Rock" && computerSelection === "Paper") {
-            let whoWins = "lose";
-            whatWins = computerSelection;
-            whatLoses = playerTitleCase;
-        }
-        // scissors beats paper
-            // if playerTitleCase is SCISSORS and computerSelection is PAPER then set WIN variables
-            // if playerTitleCase is SCISSORS and computerSelection is ROCK then set LOSE variables
-        if (playerTitleCase === "Scissors" && computerSelection === "Paper") {
-            let whoWins = "win";
-            whatWins = playerTitleCase;
-            whatLoses = computerSelection;
-        } else if (playerTitleCase === "Scissors" && computerSelection === "Rock") {
-            let whoWins = "lose";
-            whatWins = computerSelection;
-            whatLoses = playerTitleCase;
-        }
-        // paper beats rock
-            // if playerTitleCase is PAPER and computerSelection is ROCK then set WIN variables
-            // if playerTitleCase is PAPER and computerSelection is SCISSORS then set LOSE variables
-        if (playerTitleCase === "Paper" && computerSelection === "Rock") {
-            let whoWins = "win";
-            whatWins = playerTitleCase;
-            whatLoses = computerSelection;
-        } else if (playerTitleCase === "Paper" && computerSelection === "Scissors") {
-            let whoWins = "lose";
-            whatWins = computerSelection;
-            whatLoses = playerTitleCase;
-        }
+    // should take input, do the comparison with the computerplay
+    // and return "You <Win/Lose>! <ELEMENT> beats <ELEMENT>"
 
-    // set the declaration message (You <win/lose>! <winner> beats <loser>)
-    let message = "You " + whoWins + "! " + whatWins + " beats " + whatLoses;
-    return message;
+    // 1. Declare my variables: winner, elementWin, elementLose
+    // Decided to declare them as globals b/c scope. Was that necessary?
+
+    // 2. Compare playerSelection to computerSelection (case insensitive)
+    // TODO: CASE INSENSITIVE HANDLING, maybe right after userInput stand alone so I don't have to do that mess in here.
+        // rock beats sissors
+        // scissors beats paper
+        // paper beats rock
+        
+        // if playerSelection = Rock and computerSelection is Paper
+            // winOrLose = "win"
+            // elementWin = playerSelection - do this later with setWinningElements function, pass in playerSelection with correct casing
+            // elementLose = computerSelection - do this later with setWinning Elements function, pass in computerSelection (cased correctly already)
+
+    if ( ((playerSelection.toUpperCase() == "Rock") && (computerSelection.toUpperCase() == "Scissors")) ||
+         ((playerSelection.toUpperCase() == "Scissors") && (computerSelection.toUpperCase() == "Paper")) ||
+         ((playerSelection.toUpperCase() == "Paper") && (computerSelection.toUpperCase() == "Rock")) ) {
+        winOrLose = "Win";
+    } else if (playerSelection.toUpperCase() == computerSelection.toUpperCase()) {
+        winOrLose = "Tie";
+    } else {
+        winOrLose = "Lose";
+    }
+
+    // Now, use the info we have to build our variables
+    setWinningElements(winOrLose, playerSelection, computerSelection);
+    return [winOrLose, playerSelection, computerSelection];
 }
 
-let userInput = prompt("What say you, chap?\nRock, Paper, or Scissors?","Type your choice here");
-playRPS(userInput,computerPlay())
+function setWinningElements(whoWon, playerSelection, computerSelection) {
+    if (whoWon == "Win") {
+        elementWin = playerSelection;
+        elementLose = computerSelection;
+    } else if (whoWon == "Lose") {
+        elementWin = computerSelection;
+        elementLose = playerSelection;
+    } else if (whoWon == "Tie") {
+        elementWin = "Nothing";
+        elementLose = "anything in a tie!";
+    } else {
+        console.log('Error in setWinningElements logic');
+    }
+
+    // this wasn't actually needed. two reasons, I think:
+        // 1. technically we have the info in global variables
+        // 2. we're returning the info in the playRPS() function
+    // return [whoWon, elementWin, elementLose];
+}
+
+// Declaring global variables to be used in playRPS
+// and setWinningElements
+// and in output to user
+let winOrLose;
+let elementWin;
+let elementLose;
+
+// Get input from user and invoke the playRPS game
+let userInput = prompt("What say you, chap?\n\nRock, Paper, or Scissors?","Type your choice here");
+
+// Testing the playRPS and setWinningElements functions
+// console.log(playRPS(userInput,computerPlay()));
+// console.log("You " + winOrLose + ". " + elementWin + " beats " + elementLose);
