@@ -48,7 +48,6 @@ function playRPS(playerSelection, computerSelection) {
         playerScore++;
     } else if (playerSelection.toUpperCase() == computerSelection.toUpperCase()) {
         winOrLose = "Tie";
-        i++;
         tieScore++;
     } else {
         winOrLose = "Lose";
