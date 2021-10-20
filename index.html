@@ -3,9 +3,35 @@
 <head>
   <title>TOP Rock Paper Scissors</title>
   <meta charset="UTF-8"/>
-  <script src="rpsscript.js"></script>
+  <script src="rpsscript.js" defer></script>
 </head>
 <body>
+  <h1>Rock, Paper, Scissors</h1>
+  
+  <div id="container">
+
+    <div class="roundsFieldDiv">
+      <div class="text">Enter the numer of rounds you'd like to play.</div>
+      <div class="manualInput">
+        <input type="number" id="roundsField" name="roundsField" value="3" style="width: 30px;">
+      </div>
+    </div>
+
+    <div id="currentStatus">
+      Now, choose your weapon!
+    </div>
+
+    <div class="buttons">
+      <button id="buttonRock">Rock</button>
+      <button id="buttonPaper">Paper</button>
+      <button id="buttonScissors">Scissors</button>
+    </div>
+
+    <div id="results"></div>
+    <div id="playagain"></div>
+
+  </div>
+
   <script>
     // alert('test');
   </script>

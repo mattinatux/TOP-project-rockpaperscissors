@@ -1,3 +1,18 @@
+// sets userRounds constant based on HTML form
+ // = (document.querySelector('#roundsField')).value;
+// variables used in playRPS and needed higher in scope
+let playerSelection;
+let computerSelection;
+let winOrLose;
+let userRounds
+// variables needed for user output
+let elementWin;
+let elementLose;
+let playerScore = 0;
+let computerScore = 0;
+let tieScore = 0;
+let i = 0;
+
 function computerPlay() {
     // should randomly return either "Rock", "Paper", or "Scissors"
     // choose a random number between 0 and 2
@@ -20,115 +35,107 @@ function computerPlay() {
             break;
     }
     // return the output
+    computerSelection = result;
     return result;
 }
 
-// Test for computerPlay function
-// console.log("hi");
-// console.log(computerPlay());
-// console.log("bye");
-
 function playRPS(playerSelection, computerSelection) {
-    // should take input, do the comparison with the computerplay
-    // and return "You <Win/Lose>! <ELEMENT> beats <ELEMENT>"
-
-    // decided to ask the player in this function so we can play multiple games :-)
-    playerSelection = playerSelection || prompt("What say you, chap?\n\nRock, Paper, or Scissors?","Type your choice here");
-
-    // 1. Declare my variables: winner, elementWin, elementLose
-    // Decided to declare them as globals b/c scope. Was that necessary?
-
-    // 2. Compare playerSelection to computerSelection (case insensitive)
-    // TODO: CASE INSENSITIVE HANDLING, maybe right after userInput stand alone so I don't have to do that mess in here.
-        // rock beats sissors
-        // scissors beats paper
-        // paper beats rock
-        
-        // if playerSelection = Rock and computerSelection is Paper
-            // winOrLose = "win"
-            // elementWin = playerSelection - do this later with setWinningElements function, pass in playerSelection with correct casing
-            // elementLose = computerSelection - do this later with setWinning Elements function, pass in computerSelection (cased correctly already)
-
-    if ( ((playerSelection.toUpperCase() == "Rock") && (computerSelection.toUpperCase() == "Scissors")) ||
-         ((playerSelection.toUpperCase() == "Scissors") && (computerSelection.toUpperCase() == "Paper")) ||
-         ((playerSelection.toUpperCase() == "Paper") && (computerSelection.toUpperCase() == "Rock")) ) {
+    if ( ((playerSelection.toUpperCase() == "ROCK") && (computerSelection.toUpperCase() == "SCISSORS")) ||
+         ((playerSelection.toUpperCase() == "SCISSORS") && (computerSelection.toUpperCase() == "PAPER")) ||
+         ((playerSelection.toUpperCase() == "PAPER") && (computerSelection.toUpperCase() == "ROCK")) ) {
         winOrLose = "Win";
+        i++;
+        playerScore++;
     } else if (playerSelection.toUpperCase() == computerSelection.toUpperCase()) {
         winOrLose = "Tie";
+        i++;
+        tieScore++;
     } else {
         winOrLose = "Lose";
+        i++;
+        computerScore++;
     }
 
     // Now, use the info we have to build our variables
     setWinningElements(winOrLose, playerSelection, computerSelection);
-    return [winOrLose, playerSelection, computerSelection];
+
+    // write it to the browser results div
+    const htmlResults = document.querySelector('#results');
+    
+    htmlResults.textContent = `You chose... ${playerSelection}
+        and the computer chose... ${computerSelection}!
+        ${elementWin} beats ${elementLose}! You ${winOrLose}!
+        The score is... YOU: ${playerScore}  COMPUTER: ${computerScore}  (${tieScore} ties).`
+    
+    console.log([winOrLose, playerSelection, computerSelection]);
 }
 
 function setWinningElements(whoWon, playerSelection, computerSelection) {
     if (whoWon == "Win") {
         elementWin = playerSelection;
         elementLose = computerSelection;
-        alert('You ' + whoWon + '!\n\nYou chose:' + playerSelection + '\nComputer chose: ' + computerSelection);
+        // console.log('You ' + whoWon + '!\n\nYou chose:' + playerSelection + '\nComputer chose: ' + computerSelection);
     } else if (whoWon == "Lose") {
         elementWin = computerSelection;
         elementLose = playerSelection;
-        alert('You ' + whoWon + '!\n\nYou chose: ' + playerSelection + '\nComputer chose: ' + computerSelection);
+        // console.log('You ' + whoWon + '!\n\nYou chose: ' + playerSelection + '\nComputer chose: ' + computerSelection);
     } else if (whoWon == "Tie") {
         elementWin = "Nothing";
         elementLose = "anything in a tie!";
-        alert('You ' + whoWon + '!\n\nYou chose: ' + playerSelection + '\nComputer chose: ' + computerSelection);
+        // console.log('You ' + whoWon + '!\n\nYou chose: ' + playerSelection + '\nComputer chose: ' + computerSelection);
     } else {
         console.log('Error in setWinningElements logic');
     }
-
-    // this wasn't actually needed. two reasons, I think:
-        // 1. technically we have the info in global variables
-        // 2. we're returning the info in the playRPS() function
-    // return [whoWon, elementWin, elementLose];
 }
 
-// Declaring global variables to be used in playRPS
-// and setWinningElements
-// and in output to user
-let playerSelection;
-let winOrLose;
-let elementWin;
-let elementLose;
-let playerScore = 0;
-let computerScore = 0;
-let tieScore = 0;
-
-// Get input from user and invoke the playRPS game
-// MOVING TO INSIDE THE FUNCTION
-// let userInput = prompt("What say you, chap?\n\nRock, Paper, or Scissors?","Type your choice here");
-
-// Testing the playRPS and setWinningElements functions
-// console.log(playRPS(userInput,computerPlay()));
-// console.log("You " + winOrLose + ". " + elementWin + " beats " + elementLose);
-
-function game(rounds) {
-    for (let i = 1; i <= parseInt(rounds); i++) {
-        // play the game
+function clickRock() {
+    playerSelection = "Rock";
+    setRounds();
+    if (i <= userRounds) {
         playRPS(playerSelection,computerPlay());
-        
-        // tally it up each round
-        if (winOrLose == "Win") {
-            playerScore++;
-        } else if (winOrLose = "Tie") {
-            tieScore++;
-        } else if (winOrLose == "Lose") {
-            computerScore++;
-        }
+    } else {
+        const playagaindiv = document.querySelector('#playagain');
+        playagaindiv.textContent = `Game over, man! Refresh the page to play again. 
+            Want more rounds? Increase the number before you start!`;
     }
-
-    // return an array with the player score first and computer score second
-    return [playerScore,computerScore];
 }
 
-// Testing the game
-//console.log(game(2));
-let rounds = prompt('How many games would you like, pal?','Enter a number here')
-    //invoke it with the rounds chosen
-    game(rounds);
-    //give the results of the match (game end)
-    alert("The results are in!\n\n" + "You scored: " + playerScore + "\n\nThe computer scored: " + computerScore + "\n\nAnd you tied " + tieScore + " time(s)!");
+function clickPaper() {
+    playerSelection = "Paper";
+    setRounds();
+    if (i <= userRounds) {
+        playRPS(playerSelection,computerPlay());
+    } else {
+        const playagaindiv = document.querySelector('#playagain');
+        playagaindiv.textContent = `Game over, man! Refresh the page to play again. 
+            Want more rounds? Increase the number before you start!`;
+    }
+}
+
+function clickScissors() {
+    playerSelection = "Scissors";
+    setRounds();
+    if (i <= userRounds) {
+        playRPS(playerSelection,computerPlay());
+    } else {
+        const playagaindiv = document.querySelector('#playagain');
+        playagaindiv.textContent = `Game over, man! Refresh the page to play again. 
+            Want more rounds? Increase the number before you start!`;
+    }
+}
+
+function setRounds() {
+    if (playerScore==0 && tieScore==0 && computerScore==0) {
+        userRounds = (document.querySelector('#roundsField')).value;
+        i = 1;
+    };
+}
+
+const buttonRock = document.querySelector('#buttonRock');
+buttonRock.addEventListener('click', clickRock)
+
+const buttonPaper = document.querySelector('#buttonPaper');
+buttonPaper.addEventListener('click', clickPaper)
+
+const buttonScissors = document.querySelector('#buttonScissors');
+buttonScissors.addEventListener('click', clickScissors)
